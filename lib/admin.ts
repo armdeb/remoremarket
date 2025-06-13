@@ -423,9 +423,9 @@ export class AdminService {
 
       const sellerStats: Record<string, { id: string, name: string, sales: number, revenue: number }> = {};
       
-      sellerData?.forEach(order => {
+      sellerData?.forEach((order: any) => {
         const sellerId = order.seller_id;
-        const sellerName = order.seller?.nickname || 'Unknown';
+        const sellerName = Array.isArray(order.seller) ? (order.seller[0]?.nickname || 'Unknown') : (order.seller?.nickname || 'Unknown');
         
         if (!sellerStats[sellerId]) {
           sellerStats[sellerId] = {
@@ -601,7 +601,7 @@ export class AdminService {
         profile_picture: user.profile_picture,
         first_name: user.first_name,
         last_name: user.last_name,
-        status: 'active', // In real app, this would come from user table
+        status: 'active' as 'active', // In real app, this would come from user table
         created_at: user.created_at,
         updated_at: user.updated_at,
         items_count: user.items?.[0]?.count || 0,
@@ -1281,7 +1281,7 @@ export class AdminService {
         reporter_id: 'user-1',
         reported_id: 'user-2',
         type: 'item_not_as_described',
-        description: 'Item has significant wear not mentioned in description. The jacket has several tears and stains that were not disclosed in the listing. The seller claimed it was in "good" condition but it's barely wearable. I've attached photos showing the damage.',
+        description: 'Item has significant wear not mentioned in description. The jacket has several tears and stains that were not disclosed in the listing. The seller claimed it was in "good" condition but its barely wearable. Ive attached photos showing the damage.',
         status: 'open',
         priority: 'medium',
         created_at: new Date().toISOString(),
