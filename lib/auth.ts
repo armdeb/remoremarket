@@ -21,25 +21,25 @@ export class AuthService {
   // Check if nickname is unique in real-time
   static async checkNicknameAvailability(nickname: string): Promise<boolean> {
     if (!nickname || nickname.length < 3) return false;
-    
+  
     try {
       const { data, error } = await supabase
         .from('profiles')
         .select('nickname')
-        .eq('nickname', nickname.toLowerCase())
-        .single();
-
-      if (error && error.code === 'PGRST116') {
-        // No rows returned, nickname is available
-        return true;
+        .ilike('nickname', nickname.toLowerCase()); // case-insensitive
+  
+      if (error) {
+        console.error('Error checking nickname:', error);
+        return false;
       }
-      
-      return false; // Nickname exists
+  
+      return data.length === 0; // true = available
     } catch (error) {
-      console.error('Error checking nickname:', error);
+      console.error('Exception checking nickname:', error);
       return false;
     }
   }
+  
 
   // Sign up with email and password
   static async signUpWithEmail(userData: SignUpData) {
